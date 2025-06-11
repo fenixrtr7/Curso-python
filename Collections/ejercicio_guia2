@@ -1,0 +1,50 @@
+from collections import defaultdict
+from collections import Counter
+from enum import Enum
+import random
+
+class OrderStatus(Enum):
+    PENDING = 1 # Pendiente
+    SHIPPED = 2 # Enviado
+    DELIVERED = 3 # Entregado
+
+def generate_order(products: list[str], size: int) -> list[str]:
+    """
+    Genera una lista de acuerdo a la cantidad de pedidos
+    """
+    return [random.choice(products) for _ in range(size)]
+
+def assign_status(orders: list[str]) -> defaultdict:
+    products_count = defaultdict(list)
+    for product in orders:
+        products_count[product].append(random.randint(1, 3))
+    return products_count
+
+def check_order_status(status: OrderStatus) -> str:
+    # Comprueba el estadp del pedido y devuelve un mensaje
+    if status == OrderStatus.PENDING.value:
+        return "Pendiente de envio"
+    if status == OrderStatus.SHIPPED.value:
+        return "Enviado"
+    if status == OrderStatus.DELIVERED.value:
+        return "Entregado"
+    else:
+        return "Order not found"
+    
+# Relacion de productos
+products: list[str] = ['laptop', 'smartphone', 'PC', 'tablet']
+    
+# Generar los pedidos
+database = generate_order(products, 10)
+#print(database)
+
+# Generar los estados de cada pedido
+pedidos = assign_status(database)
+#print(pedidos)
+
+# Revisar el estado de las ordenes 
+for pedido, status in pedidos.items():
+    print(f"\nProducto: {pedido}, Pedidos: {Counter(database)[pedido]}")
+    print("Estado de cada pedido")
+    for index, value in enumerate(status):
+        print(f"{'- Pedido':>10} #{index+1}: {check_order_status(value)}")
